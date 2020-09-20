@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import TodoItem from './components/todoItem';
 import Header from './components/header';
+import AddTodo from './components/addTodo';
 
 export default function App() {
   var [todos, setTodos] = useState([
@@ -16,19 +17,34 @@ export default function App() {
     });
   });
   }; 
+  var addTodo = (val) => {
+    
+      setTodos(
+        (prevTodos) => { 
+          return [
+            {text:val, key:Math.random().toString()},
+            ...prevTodos
+          ];
+        }
+      ) 
+    
+  };
 
   return (
-    <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
       <Header />
+      <AddTodo addTodo = {(val) => addTodo(val)} />
       <FlatList
-      data={todos}
-      renderItem={({item}) => {
-        return (
-          <TodoItem text={item.text} deleteTodo = {() => deleteTodo(item.key)}/>
-        );
-      }}
+        data={todos}
+        renderItem={({item}) => {
+          return (
+            <TodoItem text={item.text} deleteTodo = {() => deleteTodo(item.key)}/>
+          );
+        }}
       />
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
